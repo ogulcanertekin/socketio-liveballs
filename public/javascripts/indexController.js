@@ -1,3 +1,3 @@
 app.controller('indexController',['$scope',($scope)=>{
-    console.log('Hey');
+    const socket=io.connect('http://localhost:3000');
 }]);
