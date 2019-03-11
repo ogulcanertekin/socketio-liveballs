@@ -25,17 +25,32 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                 socket.emit('newUser',{username:username})  //prompta girillen kullanıcı adını alarak newUser adlı emit ile back ende gönderiyoruz.   src içerisinde socketApi.js de karsılıyoruz.  
 
                 socket.on('newUserJoined',(data)=>{         // Sunucuya gönderilen kullanıcı adını diger kullanıcılara göndermek için sunucuda broadcast ile emitledikten sonra burda yakalayıyoruz ve diger kullanıcıların görmesini saglıyoruz.
-                    const messageData ={
-                        type: 0 ,                           // Sunucu tarafından gönderilen bir mesaj oldugunu belirtmek için type degiskeni olusturduk.Xlyte joined room.
-                        username:data.username
-                    }
+                    const messageData = {
+                        type: {
+                            code: 0 ,   // Server or User Message
+                            status:1    // Login or Disconnect
+                        },
+                        username: data.username
+                    };
 
-                    $scope.messages.push(messageData);  // Angular scopeta tanımladıgımız messages arrayine bu mesajı atadık.
+                    $scope.messages.push(messageData);      // Angular scopeta tanımladıgımız messages arrayine bu mesajı atadık.
+                    $scope.$apply();
+                });
+
+                socket.on('disconnectUser',(data)=>{
+                    const messageData = {
+                        type: {
+                            code: 0 ,
+                            status:0
+                        },
+                        username: data.username
+                    };
+                    $scope.messages.push(messageData);
                     $scope.$apply();
                 });
             }).catch((err)=>{
                 console.log(err);
             });
     }
-    
+
 }]);

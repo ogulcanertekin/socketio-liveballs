@@ -19,11 +19,14 @@ block content
                 .message this is awesome
           .ui.items.chat
             .item(ng-repeat="message in messages") <!-- index Controllerda messages arrayine gönderdigim mesajları angularda bu sekilde dolassabiliyorum. -->
-              .content(ng-if="!message.type")
-                span [SERVER]                       <!--Message.type 0 sa span [SERVER] kullansın -->
+              .content(ng-if="!message.type.code")
+                span [SERVER]                       
                 a.header.name {{ message.username }} &nbsp;
-                .description.message
+                .description.message(ng-if="!message.type.status")  <!-- Status eger 0 ise ayrıldı demek angular dilinde...-->
+                  | leaved now
+                .description.message(ng-if="message.type.status")
                   | joined now
+
           .ui.action.input.fluid
             input(type='text', placeholder='Type here...')
             button.ui.button Send
