@@ -21,16 +21,18 @@ io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugun
         }
 
         const userData = Object.assign(data,defaultData);  //emitle gelen username datasını ve kullanıcı id ve position datalarını tek bir obje içinde birleştiriyoruz.
-        users[socket.id]= userData;       // users bir object oldugundan her yeni gelen kullanıcı idsini key olarak datasını da value olarak atıyoruz.
+        users[socket.id]= userData;                         // users bir object oldugundan her yeni gelen kullanıcı idsini key olarak datasını da value olarak atıyoruz.
         
         socket.broadcast.emit('newUserJoined',users[socket.id]);      //Sunucudan cliente emit--> chat kısmında odaya katılan kişi ismini socket.on ile yukarda aldıktan sonra, diger kullanıcılara göstermek için.Angular indexController kısmında karsılıyoruz.
+
+        socket.emit('initPlayers',users);
 
     });
 
     socket.on('disconnect',()=>{                            
         socket.broadcast.emit('disconnectUser',users[socket.id]);
-        delete users[socket.id];            //Keye karsılık gelen useri aktif useerlardan cıkarıyoruz.
-        console.log(users);
+        delete users[socket.id];                               //Keye karsılık gelen useri aktif useerlardan cıkarıyoruz.
+        //console.log(users);
     });
 
 });

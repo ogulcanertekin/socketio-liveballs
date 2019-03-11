@@ -5,18 +5,17 @@ block content
     .ui.one.column.stackable.center.aligned.page.grid.margin-30
         .column.twelve.wide
           .ui.stacked.segment.gameArea
-            .circle.blue(style='left:150px; top:100px')
+
+            .circle.blue(
+                ng-repeat="player in players",
+                ng-style="{'left':player.position.y,'top':player.position.x}",
+                id="{{player.id}}"  
+              ) <!--dive id veriyoruz ki herhangi bir mesaj yazıldıgında ekranda nerde gozukecegını belırlemek ıcın. -->
               .relative
-                span.name Mehmet
-                .message Selam
-            .circle.green(style='left:300px; top:100px')
-              .relative
-                span.name Alp
-                .message selam nasılsın :)
-            .circle.red(style='left:350px; top:300px')
-              .relative
-                span.name Joe
-                .message this is awesome
+                span.name {{player.username}}
+                // .message Selam
+            
+
           .ui.items.chat
             .item(ng-repeat="message in messages") <!-- index Controllerda messages arrayine gönderdigim mesajları angularda bu sekilde dolassabiliyorum. -->
               .content(ng-if="!message.type.code")
