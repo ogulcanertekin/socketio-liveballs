@@ -22,7 +22,9 @@ io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugun
 
         const userData = Object.assign(data,defaultData);  //emitle gelen username datasını ve kullanıcı id ve position datalarını tek bir obje içinde birleştiriyoruz.
         users.push(userData);
-        console.log(users);
+        
+        socket.broadcast.emit('newUserJoined',userData);      //Sunucudan cliente emit--> chat kısmında odaya katılan kişi ismini socket.on ile yukarda aldıktan sonra, diger kullanıcılara göstermek için.Angular indexController kısmında karsılıyoruz.
+
     });
 
 });
