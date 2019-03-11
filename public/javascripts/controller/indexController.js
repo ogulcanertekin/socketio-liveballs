@@ -39,6 +39,7 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                     };
 
                     $scope.messages.push(messageData);      // Angular scopeta tanımladıgımız messages arrayine bu mesajı atadık.
+                    $scope.players[data.id]=data;       // yeni gelen kullanıcının da oyun alanında gözükmesi için
                     $scope.$apply();
                 });
 
@@ -51,19 +52,33 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                         username: data.username
                     };
                     $scope.messages.push(messageData);
-                    $scope.$apply();
+                    delete $scope.players[data.id];
+                    $scope.$apply();       
                 });
+
 
                 let animate = false;        //bir animasyon bitmeden öteki baslamaması için.
                 $scope.onClickPlayer = ($event)=>{          // ui.stacked.segment.gameArea ya bu eventi atadık. Bu div alanı içersinde nereye tıklanırsa tıklansın angular herhangi bir event (click oldugunda) tetiklenecek 
                     if(!animate){
+                        let x=$event.offsetX;
+                        let y=$event.offsetY;
+
+                        socket.emit('animate',{x,y});  // Diger kullanıcıların da hareketten haberi olması için emit ile sunucu tarafına bu koordinatları gönderiyoruz.Sunucu tarafından da broadcast ve userid vererek diger kullanıcılara emitlencek.
+
                         animate =true;
-                        $('#'+socket.id).animate({'left':$event.offsetX,'top':$event.offsetY},()=>{     //daha önceden idsine useridyi atadıgımız divi $event.offsetx ile koordinatını angular ile alıp animate ile hareket ettiriyoruz.
+                        $('#'+socket.id).animate({'left':x,'top':y},()=>{     //$('#'+socket.id)-->daha önceden idsine useridyi atadıgımız divi yani baglanan kullanıcıya ait yuvarlagı--> $event.offsetx ve y  ile koordinatını angular ile alıp animate ile hareket ettiriyoruz.
                             animate=false;
                         })
                     }
                 };
 
+                socket.on('animateOtherUser',data=>{        //sunucudan gelen id ve güncel x y koordinatlarını animate emitiyle gönderdikten sonra sunucudan broadcast ederek burda yakalıyoruz ve diger kullanıcılarda da o userid ye denk gelen divi animate ile oynatıyoruz.
+                    
+                    $('#'+data.socketId).animate({'left':data.x,'top':data.y},()=>{     
+                            animate=false;
+                        })
+                    
+                });
             }).catch((err)=>{
                 console.log(err);
             });
