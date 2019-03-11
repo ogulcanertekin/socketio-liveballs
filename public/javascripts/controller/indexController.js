@@ -52,7 +52,7 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                         username: data.username
                     };
                     $scope.messages.push(messageData);
-                    delete $scope.players[data.id];
+                    delete $scope.players[data.id]; // kullanıcı ayrıldıktan sonra oyun alanından da silinmesi gerek.
                     $scope.$apply();       
                 });
 

@@ -8,6 +8,11 @@ socketApi.io=io;        // sunucunun basladıgı bin www da kullanabilmek için 
 
 const users = {};       // bir dizide tutmak yerine bu sekilde tutarsam socket idlerine karsılık kullanıcı datalarını key value seklinde tutabilirim.
 
+
+//helpers
+
+const randomColor = require('../helpers/randomColor');
+
 io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugunda tetiklenecek method.
     console.log('a user connected');
 
@@ -17,8 +22,9 @@ io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugun
             position: {
                 x:0,
                 y:0
-            }
-        }
+            },
+            color:randomColor()     //default olarak random color.
+        };
 
         const userData = Object.assign(data,defaultData);  //emitle gelen username datasını ve kullanıcı id ve position datalarını tek bir obje içinde birleştiriyoruz.
         users[socket.id]= userData;                         // users bir object oldugundan her yeni gelen kullanıcı idsini key olarak datasını da value olarak atıyoruz.
