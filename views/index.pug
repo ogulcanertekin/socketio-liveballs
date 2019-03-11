@@ -18,9 +18,9 @@ block content
                 span.name Joe
                 .message this is awesome
           .ui.items.chat
-            .item(ng-repeat="message in messages") 
+            .item(ng-repeat="message in messages") <!-- index Controllerda messages arrayine gönderdigim mesajları angularda bu sekilde dolassabiliyorum. -->
               .content(ng-if="!message.type")
-                span [SERVER]
+                span [SERVER]                       <!--Message.type 0 sa span [SERVER] kullansın -->
                 a.header.name {{ message.username }} &nbsp;
                 .description.message
                   | joined now
