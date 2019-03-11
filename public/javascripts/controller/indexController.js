@@ -53,6 +53,17 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                     $scope.messages.push(messageData);
                     $scope.$apply();
                 });
+
+                let animate = false;        //bir animasyon bitmeden öteki baslamaması için.
+                $scope.onClickPlayer = ($event)=>{          // ui.stacked.segment.gameArea ya bu eventi atadık. Bu div alanı içersinde nereye tıklanırsa tıklansın angular herhangi bir event (click oldugunda) tetiklenecek 
+                    if(!animate){
+                        animate =true;
+                        $('#'+socket.id).animate({'left':$event.offsetX,'top':$event.offsetY},()=>{     //daha önceden idsine useridyi atadıgımız divi $event.offsetx ile koordinatını angular ile alıp animate ile hareket ettiriyoruz.
+                            animate=false;
+                        })
+                    }
+                };
+
             }).catch((err)=>{
                 console.log(err);
             });
