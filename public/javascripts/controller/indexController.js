@@ -97,7 +97,14 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                     $scope.messages.push(messageData);
                     $scope.message = '';            //input clean
 
+                    socket.emit('newMessage',messageData);      // MessageDatayı sunucuya gonderdik tüm kullanıcılara iletmek için.
+
                 };
+
+                socket.on('newMessageUserToUsers',(data)=>{     // Broadcast emit ile gelen datayı karsılıyoruz.
+                    $scope.messages.push(data);
+                    $scope.$apply();
+                });
 
             }).catch((err)=>{
                 console.log(err);

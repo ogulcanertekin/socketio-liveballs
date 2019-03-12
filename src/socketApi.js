@@ -52,6 +52,10 @@ io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugun
         });
     });
 
+    socket.on('newMessage',(data)=>{                //indexcontrollerdan gelen mesaj datasını karsılayarak, broadcast ile diger kullanıcılara da göndermek icin client tarafına gondermek.
+        socket.broadcast.emit('newMessageUserToUsers',(data));
+    });
+
 });
 
 module.exports = socketApi;
