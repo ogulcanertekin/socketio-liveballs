@@ -42,14 +42,18 @@ io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugun
     });
 
     socket.on('animate',(data)=>{           //client tarafından bize  emitlenen x ve y koordinatlarını alarak
-        users[socket.id].position.x = data.x;   //client tarafından aldıgım usera ait x ve y koordinatlarını güncelliyoruz.
-        users[socket.id].position.y = data.y;
-
-        socket.broadcast.emit('animateOtherUser',{        //Diger clientlerin  hangi baloncugun hareket edecegini bilmesi için id yi de göndermem gerekli.(baloncuk divlerinin idleri socketidleri atamıştık.)
-            socketId:socket.id,
-            x:data.x,
-            y:data.y
-        });
+        try{
+            users[socket.id].position.x = data.x;   //client tarafından aldıgım usera ait x ve y koordinatlarını güncelliyoruz.
+            users[socket.id].position.y = data.y;
+    
+            socket.broadcast.emit('animateOtherUser',{        //Diger clientlerin  hangi baloncugun hareket edecegini bilmesi için id yi de göndermem gerekli.(baloncuk divlerinin idleri socketidleri atamıştık.)
+                socketId:socket.id,
+                x:data.x,
+                y:data.y
+            });
+        }catch(e){
+            console.log(e);
+        }
     });
 
     socket.on('newMessage',(data)=>{                //indexcontrollerdan gelen mesaj datasını karsılayarak, broadcast ile diger kullanıcılara da göndermek icin client tarafına gondermek.
