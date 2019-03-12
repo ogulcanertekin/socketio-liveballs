@@ -53,7 +53,10 @@ io.on('connection',(socket)=>{          //herhangi bir connection eventi oldugun
     });
 
     socket.on('newMessage',(data)=>{                //indexcontrollerdan gelen mesaj datasını karsılayarak, broadcast ile diger kullanıcılara da göndermek icin client tarafına gondermek.
-        socket.broadcast.emit('newMessageUserToUsers',(data));
+
+        const message = Object.assign({socketId:socket.id},data);       //Bubble message için socket.id si gerekiyor bunu oda client tarafında kullanmak için gönderdigim dataya ekledim ve orda id ve mesajı gondererek ShowBubbleFonks cagıracagız.
+
+        socket.broadcast.emit('newMessageUserToUsers',(message));
     });
 
 });

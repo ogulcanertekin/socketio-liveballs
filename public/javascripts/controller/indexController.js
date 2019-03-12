@@ -20,6 +20,14 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
         });
     };
 
+    function showBubble(id,message){
+        $('#'+id).find('.message').show().html(message);    // Oyuncuları ekranda olustururken socket idsini divlerine vermiştik o divleri bularak verilen mesajları içerisindeki message classına  basıyoruz.Jquerynin find methodu ile bularak.Display başta none oldugu için show methoduyla gösteriyoruz.
+
+        setTimeout(()=>{
+            $('#'+id).find('.message').hide();          //2sn sonra kaybolsun.
+        },2000);
+    }
+
     function initSocket(username){
 
         const connectionOptions = {
@@ -108,9 +116,11 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                     };
 
                     $scope.messages.push(messageData);
-                    $scope.message = '';            //input clean
+                    $scope.message = '';                        //input clean
 
                     socket.emit('newMessage',messageData);      // MessageDatayı sunucuya gonderdik tüm kullanıcılara iletmek için.
+
+                    showBubble(socket.id, message);             //Bubble Kullanıcının kendi UI gösterilmesi.
 
                     scrollTop();                    //ScrollBar down when new message 
                 };
@@ -118,6 +128,7 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                 socket.on('newMessageUserToUsers',(data)=>{     // Broadcast emit ile gelen datayı karsılıyoruz.
                     $scope.messages.push(data);
                     $scope.$apply();
+                    showBubble(data.socketId,data.text);         // Bubble diger kullanıcıların UI gösterilmesi.
                     scrollTop();                    //ScrollBar down when new message 
                 });
 
