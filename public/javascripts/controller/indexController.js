@@ -1,4 +1,4 @@
-app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=>{
+app.controller('indexController',['$scope','indexFactory','configFactory',($scope,indexFactory,configFactory)=>{
     
     $scope.messages=[];         // angularda index scope altında bu sekilde degisken tanımlanabiliyor.Ve bu indexte dolasılabiliyor.
     $scope.players={};
@@ -36,7 +36,10 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
         };
         
         try{
-            const socket= await indexFactory.connectSocket('http://localhost:3000',connectionOptions);  //fonksiyon cagrıldıktan sonra connect saglanırsa socket.on('connect') resolve dönüyor ve then ile burda yakalıyoruz..
+
+            const socketUrl = await configFactory.getConfig();
+
+            const socket= await indexFactory.connectSocket(socketUrl.data.socketUrl,connectionOptions);  //fonksiyon cagrıldıktan sonra connect saglanırsa socket.on('connect') resolve dönüyor ve then ile burda yakalıyoruz..
                                                                 //başarılı oldugunda thene düştügünde --> indexFactoryde promisela  gelen socket datasını alıyoruz.(await yapısında ise promise dönmeden alt satırlar işletilmeyecek)
             socket.emit('newUser',{username:username})  //prompta girillen kullanıcı adını alarak newUser adlı emit ile back ende gönderiyoruz.   src içerisinde socketApi.js de karsılıyoruz.  
 
