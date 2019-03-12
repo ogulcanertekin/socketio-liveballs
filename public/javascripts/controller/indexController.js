@@ -79,6 +79,26 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                         })
                     
                 });
+
+                /* CHAT SYSTEM */
+
+                $scope.newMessage = ()=>{               // form submit oldugunda tetiklenen fonksiyon 
+
+                    let message = $scope.message;       // input içerisinde ng-model=message ile gelen texti message degiskeniyle alıyoruz.
+
+                    const messageData = {
+                        type: {
+                            code: 1 ,       // User or SERVER
+                        },
+                        username: username,     // initde promptan gelen username.
+                        text : message
+                    };
+
+                    $scope.messages.push(messageData);
+                    $scope.message = '';            //input clean
+
+                };
+
             }).catch((err)=>{
                 console.log(err);
             });
