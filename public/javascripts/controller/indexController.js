@@ -13,6 +13,13 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
     };
 
 
+    function scrollTop(){                         // Chat icin scrollbarın mesaj yazıldıkca asagıya kayması işlemi
+        setTimeout(()=>{                          // Son Data geldikten sonra calısması için önce! Bind edilmeden scroll kaydırılmaya calısılırsa son data gözükmez.
+            const element = document.getElementById('chat-area');
+            element.scrollTop=element.scrollHeight;                 // Ikisi eşitlenirse sürekli asagıda kalacak.
+        });
+    };
+
     function initSocket(username){
 
         const connectionOptions = {
@@ -41,6 +48,9 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                     $scope.messages.push(messageData);      // Angular scopeta tanımladıgımız messages arrayine bu mesajı atadık.
                     $scope.players[data.id]=data;       // yeni gelen kullanıcının da oyun alanında gözükmesi için
                     $scope.$apply();
+
+                    scrollTop();
+
                 });
 
                 socket.on('disconnectUser',(data)=>{        
@@ -53,7 +63,10 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
                     };
                     $scope.messages.push(messageData);
                     delete $scope.players[data.id]; // kullanıcı ayrıldıktan sonra oyun alanından da silinmesi gerek.
-                    $scope.$apply();       
+                    $scope.$apply();
+
+                    scrollTop();   
+
                 });
 
 
@@ -99,11 +112,13 @@ app.controller('indexController',['$scope','indexFactory',($scope,indexFactory)=
 
                     socket.emit('newMessage',messageData);      // MessageDatayı sunucuya gonderdik tüm kullanıcılara iletmek için.
 
+                    scrollTop();                    //ScrollBar down when new message 
                 };
 
                 socket.on('newMessageUserToUsers',(data)=>{     // Broadcast emit ile gelen datayı karsılıyoruz.
                     $scope.messages.push(data);
                     $scope.$apply();
+                    scrollTop();                    //ScrollBar down when new message 
                 });
 
             }).catch((err)=>{
